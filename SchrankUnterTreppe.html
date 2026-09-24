@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schrank unter einer Treppe</title>
+
+  <style>
+    :root {
+      --blau: #2563eb;
+      --blau-hell: #dbeafe;
+      --gruen: #15803d;
+      --grau: #f3f4f6;
+      --dunkel: #1f2937;
+      --orange: #ea580c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #eff6ff, #f8fafc);
+      color: var(--dunkel);
+    }
+
+    header {
+      background: var(--blau);
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+    }
+
+    header p {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    main {
+      width: min(1200px, 94%);
+      margin: 24px auto 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .karte {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
+    }
+
+    .karte h2,
+    .karte h3 {
+      margin-top: 0;
+      color: #1d4ed8;
+    }
+
+    #diagramm {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+    }
+
+    .steuerung {
+      margin: 18px 0;
+      padding: 16px;
+      background: var(--grau);
+      border-radius: 12px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blau);
+    }
+
+    .wert {
+      color: var(--blau);
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .ergebnis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .kennzahl {
+      padding: 14px;
+      border-radius: 10px;
+      background: var(--blau-hell);
+      border-left: 5px solid var(--blau);
+    }
+
+    .kennzahl strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-top: 4px;
+    }
+
+    .maximal {
+      background: #dcfce7;
+      border-left-color: var(--gruen);
+    }
+
+    .rechnung {
+      background: #f8fafc;
+      border-left: 5px solid var(--orange);
+      padding: 14px;
+      border-radius: 8px;
+      line-height: 1.7;
+    }
+
+    code {
+      background: #e5e7eb;
+      border-radius: 4px;
+      padding: 2px 5px;
+    }
+
+    .hinweis {
+      background: #fff7ed;
+      border-left: 5px solid var(--orange);
+      border-radius: 8px;
+      padding: 14px;
+      line-height: 1.5;
+    }
+
+    .aufgabe {
+      margin-top: 20px;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 8px;
+      background: var(--blau);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .antwort {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .richtig {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .falsch {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    @media (max-width: 850px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ergebnis {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Der größte Schrank unter einer Treppe</h1>
+  <p>Eine interaktive Anwendung zur Extremwertaufgabe</p>
+</header>
+
+<main>
+
+  <section class="grid">
+
+    <div class="karte">
+      <h2>1. Die Treppenbegrenzung</h2>
+
+      <p>
+        Die Treppe wird durch die Funktion
+        <strong>f(x) = 4 − 0,5x − 0,0625x²</strong>
+        beschrieben.
+      </p>
+
+      <p>
+        Die Variable <strong>x</strong> gibt die Schrankbreite in Metern an.
+        Die Funktion <strong>f(x)</strong> gibt die dazu höchstens mögliche
+        Schrankhöhe an.
+      </p>
+
+      <svg id="diagramm" viewBox="0 0 720 480" aria-label="Diagramm der Treppenfunktion">
+        <!-- Koordinatensystem -->
+        <line x1="70" y1="420" x2="680" y2="420"
+              stroke="#374151" stroke-width="2"/>
+        <line x1="70" y1="420" x2="70" y2="45"
+              stroke="#374151" stroke-width="2"/>
+
+        <!-- Achsenpfeile -->
+        <polygon points="680,420 666,413 666,427" fill="#374151"/>
+        <polygon points="70,45 63,59 77,59" fill="#374151"/>
+
+        <!-- Beschriftungen -->
+        <text x="685" y="426" font-size="18">x</text>
+        <text x="58" y="37" font-size="18">y</text>
+        <text x="62" y="442" font-size="14">0</text>
+        <text x="665" y="442" font-size="14">4</text>
+        <text x="42" y="82" font-size="14">4</text>
+
+        <!-- Gitterlinien -->
+        <line x1="222" y1="420" x2="222" y2="45"
+              stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="374" y1="420" x2="374" y2="45"
+              stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="526" y1="420" x2="526" y2="45"
+              stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="70" y1="326" x2="680" y2="326"
+              stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="70" y1="232" x2="680" y2="232"
+              stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="70" y1="138" x2="680" y2="138"
+              stroke="#e5e7eb" stroke-width="1"/>
+
+        <!-- Fläche unter der Funktion -->
+        <path id="flaeche"
+              fill="rgba(37, 99, 235, 0.15)"
+              stroke="none"/>
+
+        <!-- Treppenfunktion -->
+        <path id="funktion"
+              fill="none"
+              stroke="#2563eb"
+              stroke-width="5"/>
+
+        <!-- Schrank -->
+        <rect id="schrank"
+              x="70"
+              y="420"
+              width="0"
+              height="0"
+              fill="rgba(21, 128, 61, 0.35)"
+              stroke="#15803d"
+              stroke-width="4"/>
+
+        <!-- Markierung des aktuellen Punktes -->
+        <circle id="punkt" cx="70" cy="420" r="7" fill="#ea580c"/>
+
+        <!-- Markierung des Maximums -->
+        <line id="maxLinie"
+              x1="70" y1="420" x2="70" y2="420"
+              stroke="#15803d" stroke-width="2"
+              stroke-dasharray="7 6"/>
+        <circle id="maxPunkt" cx="70" cy="420" r="7" fill="#15803d"/>
+      </svg>
+
+      <div class="steuerung">
+        <label for="breite">
+          Schrankbreite:
+          <span id="breiteWert" class="wert">2,67 m</span>
+        </label>
+
+        <input id="breite"
+               type="range"
+               min="0"
+               max="4"
+               step="0.01"
+               value="2.67">
+      </div>
+
+      <div class="ergebnis">
+        <div class="kennzahl">
+          Aktuelle Schrankhöhe
+          <strong id="hoeheAnzeige">2,22 m</strong>
+        </div>
+
+        <div class="kennzahl">
+          Aktuelle Vorderfläche
+          <strong id="flaecheAnzeige">5,93 m²</strong>
+        </div>
+
+        <div class="kennzahl maximal">
+          Optimale Breite
+          <strong id="maxBreiteAnzeige">2,67 m</strong>
+        </div>
+
+        <div class="kennzahl maximal">
+          Maximale Fläche
+          <strong id="maxFlaecheAnzeige">5,93 m²</strong>
+        </div>
+      </div>
+    </div>
+
+    <aside class="karte">
+      <h2>2. Rechenweg</h2>
+
+      <div class="rechnung">
+        <strong>Höhenfunktion:</strong><br>
+        f(x) = 4 − 0,5x − 0,0625x²
+        <br><br>
+
+        <strong>Flächenfunktion:</strong><br>
+        A(x) = x · f(x)
+        <br>
+        A(x) = 4x − 0,5x² − 0,0625x³
+        <br><br>
+
+        <strong>1. Ableitung:</strong><br>
+        A′(x) = 4 − x − 0,1875x²
+        <br><br>
+
+        <strong>Extremstelle:</strong><br>
+        A′(x) = 0
+        <br>
+        4 − x − 0,1875x² = 0
+        <br><br>
+
+        <strong>Ergebnis:</strong><br>
+        x ≈ 2,67 m
+      </div>
+
+      <h3>Warum ist die Fläche rechteckig?</h3>
+
+      <p>
+        Der Schrank steht auf dem Boden und beginnt an der Wand.
+        Bei einer Breite von <strong>x</strong> muss seine gesamte Oberkante
+        unter der Treppe liegen.
+      </p>
+
+      <p>
+        Deshalb wird die Schrankhöhe durch den Funktionswert
+        <strong>f(x)</strong> am rechten Rand festgelegt.
+      </p>
+
+      <div class="hinweis">
+        <strong>Sachkontext:</strong><br>
+        Der mathematisch optimale Schrank ist etwa
+        <strong>2,67 m breit</strong> und <strong>2,22 m hoch</strong>.
+        In der Praxis sollte ein Sicherheitsabstand zur Treppe eingeplant
+        werden.
+      </div>
+    </aside>
+
+  </section>
+
+  <section class="aufgabe">
+    <h2>3. Kurze Lernkontrolle</h2>
+
+    <p>
+      Warum kann ein besonders breiter Schrank nicht automatisch die größte
+      Vorderfläche besitzen?
+    </p>
+
+    <select id="antwort">
+      <option value="">Bitte auswählen</option>
+      <option value="falsch">
+        Weil ein breiter Schrank immer weniger Türen hat.
+      </option>
+      <option value="richtig">
+        Weil die mögliche Höhe unter der Treppe kleiner wird.
+      </option>
+      <option value="falsch">
+        Weil die Funktion nur positive Zahlen enthält.
+      </option>
+    </select>
+
+    <br>
+
+    <button onclick="pruefeAntwort()">Antwort prüfen</button>
+
+    <div id="feedback" class="antwort"></div>
+  </section>
+
+</main>
+
+<script>
+  /*
+    Mathematisches Modell:
+    f(x) = 4 - 0.5x - 0.0625x²
+    A(x) = x · f(x)
+  */
+
+  const breiteSlider = document.getElementById("breite");
+  const breiteWert = document.getElementById("breiteWert");
+  const hoeheAnzeige = document.getElementById("hoeheAnzeige");
+  const flaecheAnzeige = document.getElementById("flaecheAnzeige");
+  const maxBreiteAnzeige = document.getElementById("maxBreiteAnzeige");
+  const maxFlaecheAnzeige = document.getElementById("maxFlaecheAnzeige");
+
+  const funktion = document.getElementById("funktion");
+  const flaeche = document.getElementById("flaeche");
+  const schrank = document.getElementById("schrank");
+  const punkt = document.getElementById("punkt");
+  const maxLinie = document.getElementById("maxLinie");
+  const maxPunkt = document.getElementById("maxPunkt");
+
+  const xStart = 70;
+  const xEnd = 680;
+  const yStart = 420;
+  const yEnd = 45;
+  const diagrammBreite = xEnd - xStart;
+  const diagrammHoehe = yStart - yEnd;
+
+  function f(x) {
+    return 4 - 0.5 * x - 0.0625 * x * x;
+  }
+
+  function A(x) {
+    return x * f(x);
+  }
+
+  // Exakte positive Lösung von A'(x) = 0
+  const optimaleBreite = (-1 + Math.sqrt(13)) / 0.375;
+  const optimaleHoehe = f(optimaleBreite);
+  const maximaleFlaeche = A(optimaleBreite);
+
+  function formatZahl(zahl, stellen = 2) {
+    return zahl.toFixed(stellen).replace(".", ",");
+  }
+
+  function xPixel(x) {
+    return xStart + (x / 4) * diagrammBreite;
+  }
+
+  function yPixel(y) {
+    return yStart - (y / 4) * diagrammHoehe;
+  }
+
+  function zeichneFunktion() {
+    let funktionsPunkte = [];
+    let flaechenPunkte = [`M ${xPixel(0)} ${yStart}`];
+
+    for (let x = 0; x <= 4; x += 0.02) {
+      const px = xPixel(x);
+      const py = yPixel(f(x));
+
+      funktionsPunkte.push(`${x === 0 ? "M" : "L"} ${px} ${py}`);
+      flaechenPunkte.push(`L ${px} ${py}`);
+    }
+
+    flaechenPunkte.push(`L ${xPixel(4)} ${yStart}`);
+    flaechenPunkte.push("Z");
+
+    funktion.setAttribute("d", funktionsPunkte.join(" "));
+    flaeche.setAttribute("d", flaechenPunkte.join(" "));
+  }
+
+  function aktualisiere() {
+    const x = parseFloat(breiteSlider.value);
+    const hoehe = Math.max(0, f(x));
+    const flaecheninhalt = Math.max(0, A(x));
+
+    breiteWert.textContent = `${formatZahl(x)} m`;
+    hoeheAnzeige.textContent = `${formatZahl(hoehe)} m`;
+    flaecheAnzeige.textContent = `${formatZahl(flaecheninhalt)} m²`;
+
+    maxBreiteAnzeige.textContent =
+      `${formatZahl(optimaleBreite)} m`;
+
+    maxFlaecheAnzeige.textContent =
+      `${formatZahl(maximaleFlaeche)} m²`;
+
+    // Aktuellen Punkt auf der Funktionskurve setzen
+    punkt.setAttribute("cx", xPixel(x));
+    punkt.setAttribute("cy", yPixel(hoehe));
+
+    // Rechteck des Schranks darstellen
+    const schrankX = xPixel(0);
+    const schrankY = yPixel(hoehe);
+    const schrankBreite = xPixel(x) - xPixel(0);
+    const schrankHoehe = yStart - schrankY;
+
+    schrank.setAttribute("x", schrankX);
+    schrank.setAttribute("y", schrankY);
+    schrank.setAttribute("width", Math.max(0, schrankBreite));
+    schrank.setAttribute("height", Math.max(0, schrankHoehe));
+
+    // Optimale Stelle im Diagramm markieren
+    const maxX = xPixel(optimaleBreite);
+    const maxY = yPixel(optimaleHoehe);
+
+    maxLinie.setAttribute("x1", maxX);
+    maxLinie.setAttribute("x2", maxX);
+    maxLinie.setAttribute("y1", yStart);
+    maxLinie.setAttribute("y2", maxY);
+
+    maxPunkt.setAttribute("cx", maxX);
+    maxPunkt.setAttribute("cy", maxY);
+  }
+
+  function pruefeAntwort() {
+    const auswahl = document.getElementById("antwort").value;
+    const feedback = document.getElementById("feedback");
+
+    feedback.className = "antwort";
+
+    if (auswahl === "richtig") {
+      feedback.textContent =
+        "Richtig! Je größer die Breite wird, desto kleiner wird die mögliche Höhe unter der Treppe.";
+      feedback.classList.add("richtig");
+    } else if (auswahl === "falsch") {
+      feedback.textContent =
+        "Noch nicht richtig. Entscheidend ist, dass die Schrankhöhe unter der Treppe abnimmt.";
+      feedback.classList.add("falsch");
+    } else {
+      feedback.textContent = "Bitte wähle zuerst eine Antwort aus.";
+      feedback.classList.add("falsch");
+    }
+  }
+
+  zeichneFunktion();
+  aktualisiere();
+
+  breiteSlider.addEventListener("input", aktualisiere);
+</script>
+
+</body>
+</html>
