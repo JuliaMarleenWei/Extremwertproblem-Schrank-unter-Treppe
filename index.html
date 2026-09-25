@@ -10,9 +10,10 @@
       --blau: #2563eb;
       --blau-hell: #dbeafe;
       --gruen: #15803d;
+      --orange: #ea580c;
+      --violett: #7c3aed;
       --grau: #f3f4f6;
       --dunkel: #1f2937;
-      --orange: #ea580c;
     }
 
     * {
@@ -44,21 +45,15 @@
     }
 
     main {
-      width: min(1200px, 94%);
+      width: min(1250px, 94%);
       margin: 24px auto 40px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 20px;
-      align-items: start;
     }
 
     .karte {
       background: white;
       border-radius: 16px;
       padding: 20px;
+      margin-bottom: 20px;
       box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
     }
 
@@ -68,13 +63,25 @@
       color: #1d4ed8;
     }
 
-    #diagramm {
+    .diagramm {
       width: 100%;
       height: auto;
       display: block;
       background: #fff;
       border: 1px solid #d1d5db;
       border-radius: 12px;
+    }
+
+    .diagramm-titel {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin: 15px 0 8px;
+    }
+
+    .diagramm-bereich {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
     .steuerung {
@@ -95,6 +102,18 @@
       accent-color: var(--blau);
     }
 
+    input[type="checkbox"] {
+      transform: scale(1.25);
+      margin-right: 8px;
+      accent-color: var(--violett);
+    }
+
+    .option {
+      margin-top: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     .wert {
       color: var(--blau);
       font-size: 1.3rem;
@@ -103,7 +122,7 @@
 
     .ergebnis {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-top: 16px;
     }
@@ -121,11 +140,6 @@
       margin-top: 4px;
     }
 
-    .maximal {
-      background: #dcfce7;
-      border-left-color: var(--gruen);
-    }
-
     .rechnung {
       background: #f8fafc;
       border-left: 5px solid var(--orange);
@@ -134,32 +148,31 @@
       line-height: 1.7;
     }
 
-    code {
-      background: #e5e7eb;
-      border-radius: 4px;
-      padding: 2px 5px;
-    }
-
     .hinweis {
       background: #fff7ed;
       border-left: 5px solid var(--orange);
       border-radius: 8px;
       padding: 14px;
       line-height: 1.5;
+      margin-top: 18px;
     }
 
     .aufgabe {
-      margin-top: 20px;
       background: white;
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
     }
 
+    select,
     button {
-      border: none;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
       padding: 10px 14px;
+      font-size: 1rem;
+    }
+
+    button {
       margin-top: 8px;
       background: var(--blau);
       color: white;
@@ -190,8 +203,12 @@
       color: #991b1b;
     }
 
+    .versteckt {
+      display: none;
+    }
+
     @media (max-width: 850px) {
-      .grid {
+      .diagramm-bereich {
         grid-template-columns: 1fr;
       }
 
@@ -206,183 +223,224 @@
 
 <header>
   <h1>Der größte Schrank unter einer Treppe</h1>
-  <p>Eine interaktive Anwendung zur Extremwertaufgabe</p>
+  <p>Eine interaktive Extremwertaufgabe</p>
 </header>
 
 <main>
 
-  <section class="grid">
+  <section class="karte">
+    <h2>Interaktive Darstellung</h2>
 
-    <div class="karte">
-      <h2>1. Die Treppenbegrenzung</h2>
+    <div class="steuerung">
+      <label for="breite">
+        Schrankbreite:
+        <span id="breiteWert" class="wert">2,67 m</span>
+      </label>
 
-      <p>
-        Die Treppe wird durch die Funktion
-        <strong>f(x) = 4 − 0,5x − 0,0625x²</strong>
-        beschrieben.
-      </p>
+      <input
+        id="breite"
+        type="range"
+        min="0"
+        max="4"
+        step="0.01"
+        value="2.67"
+      >
 
-      <p>
-        Die Variable <strong>x</strong> gibt die Schrankbreite in Metern an.
-        Die Funktion <strong>f(x)</strong> gibt die dazu höchstens mögliche
-        Schrankhöhe an.
-      </p>
-
-      <svg id="diagramm" viewBox="0 0 720 480" aria-label="Diagramm der Treppenfunktion">
-        <!-- Koordinatensystem -->
-        <line x1="70" y1="420" x2="680" y2="420"
-              stroke="#374151" stroke-width="2"/>
-        <line x1="70" y1="420" x2="70" y2="45"
-              stroke="#374151" stroke-width="2"/>
-
-        <!-- Achsenpfeile -->
-        <polygon points="680,420 666,413 666,427" fill="#374151"/>
-        <polygon points="70,45 63,59 77,59" fill="#374151"/>
-
-        <!-- Beschriftungen -->
-        <text x="685" y="426" font-size="18">x</text>
-        <text x="58" y="37" font-size="18">y</text>
-        <text x="62" y="442" font-size="14">0</text>
-        <text x="665" y="442" font-size="14">4</text>
-        <text x="42" y="82" font-size="14">4</text>
-
-        <!-- Gitterlinien -->
-        <line x1="222" y1="420" x2="222" y2="45"
-              stroke="#e5e7eb" stroke-width="1"/>
-        <line x1="374" y1="420" x2="374" y2="45"
-              stroke="#e5e7eb" stroke-width="1"/>
-        <line x1="526" y1="420" x2="526" y2="45"
-              stroke="#e5e7eb" stroke-width="1"/>
-        <line x1="70" y1="326" x2="680" y2="326"
-              stroke="#e5e7eb" stroke-width="1"/>
-        <line x1="70" y1="232" x2="680" y2="232"
-              stroke="#e5e7eb" stroke-width="1"/>
-        <line x1="70" y1="138" x2="680" y2="138"
-              stroke="#e5e7eb" stroke-width="1"/>
-
-        <!-- Fläche unter der Funktion -->
-        <path id="flaeche"
-              fill="rgba(37, 99, 235, 0.15)"
-              stroke="none"/>
-
-        <!-- Treppenfunktion -->
-        <path id="funktion"
-              fill="none"
-              stroke="#2563eb"
-              stroke-width="5"/>
-
-        <!-- Schrank -->
-        <rect id="schrank"
-              x="70"
-              y="420"
-              width="0"
-              height="0"
-              fill="rgba(21, 128, 61, 0.35)"
-              stroke="#15803d"
-              stroke-width="4"/>
-
-        <!-- Markierung des aktuellen Punktes -->
-        <circle id="punkt" cx="70" cy="420" r="7" fill="#ea580c"/>
-
-        <!-- Markierung des Maximums -->
-        <line id="maxLinie"
-              x1="70" y1="420" x2="70" y2="420"
-              stroke="#15803d" stroke-width="2"
-              stroke-dasharray="7 6"/>
-        <circle id="maxPunkt" cx="70" cy="420" r="7" fill="#15803d"/>
-      </svg>
-
-      <div class="steuerung">
-        <label for="breite">
-          Schrankbreite:
-          <span id="breiteWert" class="wert">2,67 m</span>
-        </label>
-
-        <input id="breite"
-               type="range"
-               min="0"
-               max="4"
-               step="0.01"
-               value="2.67">
-      </div>
-
-      <div class="ergebnis">
-        <div class="kennzahl">
-          Aktuelle Schrankhöhe
-          <strong id="hoeheAnzeige">2,22 m</strong>
-        </div>
-
-        <div class="kennzahl">
-          Aktuelle Vorderfläche
-          <strong id="flaecheAnzeige">5,93 m²</strong>
-        </div>
-
-        <div class="kennzahl maximal">
-          Optimale Breite
-          <strong id="maxBreiteAnzeige">2,67 m</strong>
-        </div>
-
-        <div class="kennzahl maximal">
-          Maximale Fläche
-          <strong id="maxFlaecheAnzeige">5,93 m²</strong>
-        </div>
-      </div>
+      <label class="option">
+        <input id="zeigeFlaechenfunktion" type="checkbox" checked>
+        Flächenfunktion parallel anzeigen
+      </label>
     </div>
 
-    <aside class="karte">
-      <h2>2. Rechenweg</h2>
+    <div class="diagramm-bereich">
 
-      <div class="rechnung">
-        <strong>Höhenfunktion:</strong><br>
-        f(x) = 4 − 0,5x − 0,0625x²
-        <br><br>
+      <!-- Diagramm der Treppenfunktion -->
+      <div>
+        <div class="diagramm-titel">
+          Treppenbegrenzung und Schrank
+        </div>
 
-        <strong>Flächenfunktion:</strong><br>
-        A(x) = x · f(x)
-        <br>
-        A(x) = 4x − 0,5x² − 0,0625x³
-        <br><br>
+        <svg
+          id="diagrammTreppe"
+          class="diagramm"
+          viewBox="0 0 720 480"
+          aria-label="Diagramm der Treppenfunktion"
+        >
+          <line x1="70" y1="420" x2="680" y2="420"
+                stroke="#374151" stroke-width="2"/>
+          <line x1="70" y1="420" x2="70" y2="45"
+                stroke="#374151" stroke-width="2"/>
 
-        <strong>1. Ableitung:</strong><br>
-        A′(x) = 4 − x − 0,1875x²
-        <br><br>
+          <polygon points="680,420 666,413 666,427" fill="#374151"/>
+          <polygon points="70,45 63,59 77,59" fill="#374151"/>
 
-        <strong>Extremstelle:</strong><br>
-        A′(x) = 0
-        <br>
-        4 − x − 0,1875x² = 0
-        <br><br>
+          <text x="685" y="426" font-size="18">x</text>
+          <text x="58" y="37" font-size="18">y</text>
+          <text x="62" y="442" font-size="14">0</text>
+          <text x="665" y="442" font-size="14">4</text>
+          <text x="42" y="82" font-size="14">4</text>
 
-        <strong>Ergebnis:</strong><br>
-        x ≈ 2,67 m
+          <line x1="222" y1="420" x2="222" y2="45"
+                stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="374" y1="420" x2="374" y2="45"
+                stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="526" y1="420" x2="526" y2="45"
+                stroke="#e5e7eb" stroke-width="1"/>
+
+          <line x1="70" y1="326" x2="680" y2="326"
+                stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="70" y1="232" x2="680" y2="232"
+                stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="70" y1="138" x2="680" y2="138"
+                stroke="#e5e7eb" stroke-width="1"/>
+
+          <path id="flaecheUnterTreppe"
+                fill="rgba(37, 99, 235, 0.15)"
+                stroke="none"/>
+
+          <path id="funktion"
+                fill="none"
+                stroke="#2563eb"
+                stroke-width="5"/>
+
+          <rect id="schrank"
+                x="70"
+                y="420"
+                width="0"
+                height="0"
+                fill="rgba(21, 128, 61, 0.35)"
+                stroke="#15803d"
+                stroke-width="4"/>
+
+          <circle id="punktTreppe"
+                  cx="70"
+                  cy="420"
+                  r="7"
+                  fill="#ea580c"/>
+        </svg>
       </div>
 
-      <h3>Warum ist die Fläche rechteckig?</h3>
+      <!-- Diagramm der Flächenfunktion -->
+      <div id="flaechenDiagrammBereich">
+        <div class="diagramm-titel">
+          Flächenfunktion $A(x)$
+        </div>
 
-      <p>
-        Der Schrank steht auf dem Boden und beginnt an der Wand.
-        Bei einer Breite von <strong>x</strong> muss seine gesamte Oberkante
-        unter der Treppe liegen.
-      </p>
+        <svg
+          id="diagrammFlaeche"
+          class="diagramm"
+          viewBox="0 0 720 480"
+          aria-label="Diagramm der Flächenfunktion"
+        >
+          <line x1="70" y1="420" x2="680" y2="420"
+                stroke="#374151" stroke-width="2"/>
+          <line x1="70" y1="420" x2="70" y2="45"
+                stroke="#374151" stroke-width="2"/>
 
-      <p>
-        Deshalb wird die Schrankhöhe durch den Funktionswert
-        <strong>f(x)</strong> am rechten Rand festgelegt.
-      </p>
+          <polygon points="680,420 666,413 666,427" fill="#374151"/>
+          <polygon points="70,45 63,59 77,59" fill="#374151"/>
 
-      <div class="hinweis">
-        <strong>Sachkontext:</strong><br>
-        Der mathematisch optimale Schrank ist etwa
-        <strong>2,67 m breit</strong> und <strong>2,22 m hoch</strong>.
-        In der Praxis sollte ein Sicherheitsabstand zur Treppe eingeplant
-        werden.
+          <text x="685" y="426" font-size="18">x</text>
+          <text x="45" y="37" font-size="18">A</text>
+
+          <text x="62" y="442" font-size="14">0</text>
+          <text x="665" y="442" font-size="14">4</text>
+
+          <text x="34" y="424" font-size="14">0</text>
+          <text x="30" y="110" font-size="14">6</text>
+
+          <line x1="222" y1="420" x2="222" y2="45"
+                stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="374" y1="420" x2="374" y2="45"
+                stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="526" y1="420" x2="526" y2="45"
+                stroke="#e5e7eb" stroke-width="1"/>
+
+          <line x1="70" y1="295" x2="680" y2="295"
+                stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="70" y1="170" x2="680" y2="170"
+                stroke="#e5e7eb" stroke-width="1"/>
+
+          <path id="flaechenfunktion"
+                fill="none"
+                stroke="#7c3aed"
+                stroke-width="5"/>
+
+          <line id="flaechenSenkrechte"
+                x1="70"
+                y1="420"
+                x2="70"
+                y2="420"
+                stroke="#ea580c"
+                stroke-width="2"
+                stroke-dasharray="7 6"/>
+
+          <circle id="punktFlaeche"
+                  cx="70"
+                  cy="420"
+                  r="7"
+                  fill="#ea580c"/>
+        </svg>
       </div>
-    </aside>
 
+    </div>
+
+    <div class="ergebnis">
+      <div class="kennzahl">
+        Aktuelle Schrankhöhe
+        <strong id="hoeheAnzeige">2,22 m</strong>
+      </div>
+
+      <div class="kennzahl">
+        Aktuelle Vorderfläche
+        <strong id="flaecheAnzeige">5,93 m²</strong>
+      </div>
+
+      <div class="kennzahl">
+        Aktueller Punkt
+        <strong id="punktAnzeige">x = 2,67</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="karte">
+    <h2>Rechenweg</h2>
+
+    <div class="rechnung">
+      <strong>Höhenfunktion:</strong><br>
+      f(x) = 4 − 0,5x − 0,0625x²
+      <br><br>
+
+      <strong>Flächenfunktion:</strong><br>
+      A(x) = x · f(x)
+      <br>
+      A(x) = 4x − 0,5x² − 0,0625x³
+      <br><br>
+
+      <strong>1. Ableitung:</strong><br>
+      A′(x) = 4 − x − 0,1875x²
+      <br><br>
+
+      <strong>Extremstelle:</strong><br>
+      A′(x) = 0
+      <br>
+      4 − x − 0,1875x² = 0
+      <br><br>
+
+      <strong>Ergebnis:</strong><br>
+      x ≈ 2,67 m
+    </div>
+
+    <div class="hinweis">
+      <strong>Sachkontext:</strong><br>
+      Wird der Schrank breiter, nimmt die mögliche Höhe unter der Treppe ab.
+      Die Flächenfunktion zeigt, bei welcher Breite die Vorderfläche des
+      Schranks am größten ist.
+    </div>
   </section>
 
   <section class="aufgabe">
-    <h2>3. Kurze Lernkontrolle</h2>
+    <h2>Kurze Lernkontrolle</h2>
 
     <p>
       Warum kann ein besonders breiter Schrank nicht automatisch die größte
@@ -412,45 +470,51 @@
 </main>
 
 <script>
-  /*
-    Mathematisches Modell:
-    f(x) = 4 - 0.5x - 0.0625x²
-    A(x) = x · f(x)
-  */
-
   const breiteSlider = document.getElementById("breite");
   const breiteWert = document.getElementById("breiteWert");
   const hoeheAnzeige = document.getElementById("hoeheAnzeige");
   const flaecheAnzeige = document.getElementById("flaecheAnzeige");
-  const maxBreiteAnzeige = document.getElementById("maxBreiteAnzeige");
-  const maxFlaecheAnzeige = document.getElementById("maxFlaecheAnzeige");
+  const punktAnzeige = document.getElementById("punktAnzeige");
 
   const funktion = document.getElementById("funktion");
-  const flaeche = document.getElementById("flaeche");
+  const flaecheUnterTreppe =
+    document.getElementById("flaecheUnterTreppe");
+
   const schrank = document.getElementById("schrank");
-  const punkt = document.getElementById("punkt");
-  const maxLinie = document.getElementById("maxLinie");
-  const maxPunkt = document.getElementById("maxPunkt");
+  const punktTreppe = document.getElementById("punktTreppe");
+
+  const flaechenfunktion =
+    document.getElementById("flaechenfunktion");
+
+  const punktFlaeche =
+    document.getElementById("punktFlaeche");
+
+  const flaechenSenkrechte =
+    document.getElementById("flaechenSenkrechte");
+
+  const zeigeFlaechenfunktion =
+    document.getElementById("zeigeFlaechenfunktion");
+
+  const flaechenDiagrammBereich =
+    document.getElementById("flaechenDiagrammBereich");
 
   const xStart = 70;
   const xEnd = 680;
   const yStart = 420;
   const yEnd = 45;
+
   const diagrammBreite = xEnd - xStart;
   const diagrammHoehe = yStart - yEnd;
 
+  // Treppenfunktion
   function f(x) {
     return 4 - 0.5 * x - 0.0625 * x * x;
   }
 
+  // Flächenfunktion
   function A(x) {
     return x * f(x);
   }
-
-  // Exakte positive Lösung von A'(x) = 0
-  const optimaleBreite = (-1 + Math.sqrt(13)) / 0.375;
-  const optimaleHoehe = f(optimaleBreite);
-  const maximaleFlaeche = A(optimaleBreite);
 
   function formatZahl(zahl, stellen = 2) {
     return zahl.toFixed(stellen).replace(".", ",");
@@ -460,19 +524,27 @@
     return xStart + (x / 4) * diagrammBreite;
   }
 
-  function yPixel(y) {
+  function yPixelHoehe(y) {
     return yStart - (y / 4) * diagrammHoehe;
   }
 
-  function zeichneFunktion() {
+  function yPixelFlaeche(y) {
+    // Die Flächenfunktion wird bis 6 m² dargestellt.
+    return yStart - (y / 6) * diagrammHoehe;
+  }
+
+  function zeichneTreppenfunktion() {
     let funktionsPunkte = [];
     let flaechenPunkte = [`M ${xPixel(0)} ${yStart}`];
 
     for (let x = 0; x <= 4; x += 0.02) {
       const px = xPixel(x);
-      const py = yPixel(f(x));
+      const py = yPixelHoehe(f(x));
 
-      funktionsPunkte.push(`${x === 0 ? "M" : "L"} ${px} ${py}`);
+      funktionsPunkte.push(
+        `${x === 0 ? "M" : "L"} ${px} ${py}`
+      );
+
       flaechenPunkte.push(`L ${px} ${py}`);
     }
 
@@ -480,7 +552,22 @@
     flaechenPunkte.push("Z");
 
     funktion.setAttribute("d", funktionsPunkte.join(" "));
-    flaeche.setAttribute("d", flaechenPunkte.join(" "));
+    flaecheUnterTreppe.setAttribute("d", flaechenPunkte.join(" "));
+  }
+
+  function zeichneFlaechenfunktion() {
+    let punkte = [];
+
+    for (let x = 0; x <= 4; x += 0.02) {
+      const px = xPixel(x);
+      const py = yPixelFlaeche(A(x));
+
+      punkte.push(
+        `${x === 0 ? "M" : "L"} ${px} ${py}`
+      );
+    }
+
+    flaechenfunktion.setAttribute("d", punkte.join(" "));
   }
 
   function aktualisiere() {
@@ -491,40 +578,47 @@
     breiteWert.textContent = `${formatZahl(x)} m`;
     hoeheAnzeige.textContent = `${formatZahl(hoehe)} m`;
     flaecheAnzeige.textContent = `${formatZahl(flaecheninhalt)} m²`;
+    punktAnzeige.textContent = `x = ${formatZahl(x)}`;
 
-    maxBreiteAnzeige.textContent =
-      `${formatZahl(optimaleBreite)} m`;
+    // Punkt im Treppendiagramm
+    const treppenX = xPixel(x);
+    const treppenY = yPixelHoehe(hoehe);
 
-    maxFlaecheAnzeige.textContent =
-      `${formatZahl(maximaleFlaeche)} m²`;
+    punktTreppe.setAttribute("cx", treppenX);
+    punktTreppe.setAttribute("cy", treppenY);
 
-    // Aktuellen Punkt auf der Funktionskurve setzen
-    punkt.setAttribute("cx", xPixel(x));
-    punkt.setAttribute("cy", yPixel(hoehe));
+    // Schrankrechteck
+    schrank.setAttribute("x", xPixel(0));
+    schrank.setAttribute("y", treppenY);
+    schrank.setAttribute(
+      "width",
+      Math.max(0, xPixel(x) - xPixel(0))
+    );
+    schrank.setAttribute(
+      "height",
+      Math.max(0, yStart - treppenY)
+    );
 
-    // Rechteck des Schranks darstellen
-    const schrankX = xPixel(0);
-    const schrankY = yPixel(hoehe);
-    const schrankBreite = xPixel(x) - xPixel(0);
-    const schrankHoehe = yStart - schrankY;
+    // Punkt in der Flächenfunktion
+    const flaechenX = xPixel(x);
+    const flaechenY = yPixelFlaeche(flaecheninhalt);
 
-    schrank.setAttribute("x", schrankX);
-    schrank.setAttribute("y", schrankY);
-    schrank.setAttribute("width", Math.max(0, schrankBreite));
-    schrank.setAttribute("height", Math.max(0, schrankHoehe));
+    punktFlaeche.setAttribute("cx", flaechenX);
+    punktFlaeche.setAttribute("cy", flaechenY);
 
-    // Optimale Stelle im Diagramm markieren
-    const maxX = xPixel(optimaleBreite);
-    const maxY = yPixel(optimaleHoehe);
-
-    maxLinie.setAttribute("x1", maxX);
-    maxLinie.setAttribute("x2", maxX);
-    maxLinie.setAttribute("y1", yStart);
-    maxLinie.setAttribute("y2", maxY);
-
-    maxPunkt.setAttribute("cx", maxX);
-    maxPunkt.setAttribute("cy", maxY);
+    flaechenSenkrechte.setAttribute("x1", flaechenX);
+    flaechenSenkrechte.setAttribute("x2", flaechenX);
+    flaechenSenkrechte.setAttribute("y1", yStart);
+    flaechenSenkrechte.setAttribute("y2", flaechenY);
   }
+
+  zeigeFlaechenfunktion.addEventListener("change", function() {
+    if (this.checked) {
+      flaechenDiagrammBereich.classList.remove("versteckt");
+    } else {
+      flaechenDiagrammBereich.classList.add("versteckt");
+    }
+  });
 
   function pruefeAntwort() {
     const auswahl = document.getElementById("antwort").value;
@@ -534,19 +628,21 @@
 
     if (auswahl === "richtig") {
       feedback.textContent =
-        "Richtig! Je größer die Breite wird, desto kleiner wird die mögliche Höhe unter der Treppe.";
+        "Richtig! Je größer die Breite wird, desto kleiner wird die mögliche Höhe.";
       feedback.classList.add("richtig");
     } else if (auswahl === "falsch") {
       feedback.textContent =
-        "Noch nicht richtig. Entscheidend ist, dass die Schrankhöhe unter der Treppe abnimmt.";
+        "Noch nicht richtig. Entscheidend ist die abnehmende Schrankhöhe unter der Treppe.";
       feedback.classList.add("falsch");
     } else {
-      feedback.textContent = "Bitte wähle zuerst eine Antwort aus.";
+      feedback.textContent =
+        "Bitte wähle zuerst eine Antwort aus.";
       feedback.classList.add("falsch");
     }
   }
 
-  zeichneFunktion();
+  zeichneTreppenfunktion();
+  zeichneFlaechenfunktion();
   aktualisiere();
 
   breiteSlider.addEventListener("input", aktualisiere);
